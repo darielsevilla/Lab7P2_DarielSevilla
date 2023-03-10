@@ -4,7 +4,11 @@
  */
 package lab7p2_darielsevilla;
 
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
@@ -13,13 +17,92 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class Principal extends javax.swing.JFrame {
 
+    private Carpeta c = null;
+    private ArrayList<Carpeta> folders = new ArrayList();
     private DefaultListModel ml;
     private DefaultTreeModel mt;
+    private Administrador admin;
+
     public Principal() {
         initComponents();
-        ml = (DefaultListModel) 
+        ml = (DefaultListModel) jl_principal.getModel();
+        mt = (DefaultTreeModel) jt_arbol.getModel();
+        String path = "./files.dar";
+        admin = new Administrador(path);
+        admin.lea();
+        resetTree(0);
+        ml.addElement("Mi Unidad");
+        ml.addElement("Destacados");
+        ml.addElement("Papeleria");
     }
 
+    public void iniciarFile() {
+        jd_crearArchivo.pack();
+        jd_crearArchivo.setModal(true);
+        jd_crearArchivo.setLocationRelativeTo(this);
+        jd_crearArchivo.setVisible(true);
+    }
+
+    public void resetTree(int x) {
+        mt.setRoot(new DefaultMutableTreeNode("Files"));
+        DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) mt.getRoot();
+        for (Archivo a : admin.getArchivos()) {
+            if (x == 0) {
+                if (a.getTrash() == 0) {
+                    raiz.add(new DefaultMutableTreeNode(a));
+                }
+            }else if(x== 1){
+                if (a.getTrash() == 0 && a.getFavorito() == 1) {
+                    raiz.add(new DefaultMutableTreeNode(a));
+                }
+            }else if(x == 2){
+                if (a.getTrash() != 0) {
+                    raiz.add(new DefaultMutableTreeNode(a));
+                }
+            }
+
+        }
+        
+        for (Carpeta c : admin.getCarpetas()) {
+            DefaultMutableTreeNode node = nodoCarpeta(c);
+            
+           if (x == 0) {
+                if (c.getTrash() == 0) {
+                    raiz.add(node);
+                }
+            }else if(x== 1){
+                if (c.getTrash() == 0 && c.getFavorito() == 1) {
+                    raiz.add(node);
+                }
+            }else if(x == 2){
+                if (c.getTrash() != 0) {
+                    raiz.add(node);
+                }
+            }if (x == 0) {
+                if (c.getTrash() == 0) {
+                    raiz.add(node);
+                }
+            }
+            
+        }
+        System.out.println("llegue");
+        mt.reload();
+    }
+
+    public DefaultMutableTreeNode nodoCarpeta(Carpeta c){
+        DefaultMutableTreeNode nodo = new DefaultMutableTreeNode(c);
+        
+        for (Archivo a : c.getArchivos()) {
+            nodo.add(new DefaultMutableTreeNode(a));
+            
+        }
+        
+        for (Carpeta a : c.getCarpetas()) {
+         nodo.add(nodoCarpeta(a));
+        }
+            
+        return nodo;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,26 +112,283 @@ public class Principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jd_crearArchivo = new javax.swing.JDialog();
+        pn_addF = new javax.swing.JPanel();
+        bt_crear = new javax.swing.JButton();
+        lb_nf = new javax.swing.JLabel();
+        lb_ef = new javax.swing.JLabel();
+        lb_sf = new javax.swing.JLabel();
+        lb_tf = new javax.swing.JLabel();
+        tf_nF = new javax.swing.JTextField();
+        tf_sF = new javax.swing.JTextField();
+        cb_cb = new javax.swing.JComboBox<>();
+        jd_crearCarpeta = new javax.swing.JDialog();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        tf_name = new javax.swing.JTextField();
+        bt_addCarpeta = new javax.swing.JButton();
+        bt_addArchivo = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        menuCrud = new javax.swing.JPopupMenu();
+        crearCarpeta = new javax.swing.JMenuItem();
+        crearArchivo = new javax.swing.JMenuItem();
         pn_principal = new javax.swing.JPanel();
         pb_barra = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jp_principal = new javax.swing.JList<>();
+        jl_principal = new javax.swing.JList<>();
         pb_descarga = new javax.swing.JProgressBar();
         jScrollPane2 = new javax.swing.JScrollPane();
         jt_arbol = new javax.swing.JTree();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jt_reporteDescarga = new javax.swing.JTable();
+
+        pn_addF.setBackground(new java.awt.Color(204, 204, 204));
+
+        bt_crear.setText("crear");
+        bt_crear.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_crearMouseClicked(evt);
+            }
+        });
+
+        lb_nf.setBackground(new java.awt.Color(0, 0, 0));
+        lb_nf.setForeground(new java.awt.Color(0, 0, 0));
+        lb_nf.setText("Nombre:");
+
+        lb_ef.setBackground(new java.awt.Color(0, 0, 0));
+        lb_ef.setForeground(new java.awt.Color(0, 0, 0));
+        lb_ef.setText("extension:");
+
+        lb_sf.setBackground(new java.awt.Color(0, 0, 0));
+        lb_sf.setForeground(new java.awt.Color(0, 0, 0));
+        lb_sf.setText("size:");
+
+        lb_tf.setBackground(new java.awt.Color(0, 0, 0));
+        lb_tf.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lb_tf.setForeground(new java.awt.Color(0, 0, 0));
+        lb_tf.setText("Archivo");
+
+        tf_nF.setBackground(new java.awt.Color(255, 255, 255));
+
+        tf_sF.setBackground(new java.awt.Color(255, 255, 255));
+
+        cb_cb.setBackground(new java.awt.Color(255, 255, 255));
+        cb_cb.setForeground(new java.awt.Color(0, 0, 0));
+        cb_cb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pdf", "txt", "png", "jpg", "xls" }));
+
+        javax.swing.GroupLayout pn_addFLayout = new javax.swing.GroupLayout(pn_addF);
+        pn_addF.setLayout(pn_addFLayout);
+        pn_addFLayout.setHorizontalGroup(
+            pn_addFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pn_addFLayout.createSequentialGroup()
+                .addGroup(pn_addFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pn_addFLayout.createSequentialGroup()
+                        .addGroup(pn_addFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pn_addFLayout.createSequentialGroup()
+                                .addGap(36, 36, 36)
+                                .addGroup(pn_addFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(pn_addFLayout.createSequentialGroup()
+                                        .addComponent(lb_nf)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(tf_nF, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_addFLayout.createSequentialGroup()
+                                        .addComponent(lb_sf)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(tf_sF, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_addFLayout.createSequentialGroup()
+                                        .addComponent(lb_ef)
+                                        .addGap(210, 210, 210))))
+                            .addGroup(pn_addFLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lb_tf)))
+                        .addGap(0, 82, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_addFLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(bt_crear)))
+                .addContainerGap())
+            .addGroup(pn_addFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pn_addFLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(cb_cb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        pn_addFLayout.setVerticalGroup(
+            pn_addFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pn_addFLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(lb_tf)
+                .addGap(50, 50, 50)
+                .addGroup(pn_addFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lb_nf)
+                    .addComponent(tf_nF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33)
+                .addComponent(lb_ef)
+                .addGap(23, 23, 23)
+                .addGroup(pn_addFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lb_sf)
+                    .addComponent(tf_sF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addComponent(bt_crear)
+                .addContainerGap())
+            .addGroup(pn_addFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pn_addFLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(cb_cb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout jd_crearArchivoLayout = new javax.swing.GroupLayout(jd_crearArchivo.getContentPane());
+        jd_crearArchivo.getContentPane().setLayout(jd_crearArchivoLayout);
+        jd_crearArchivoLayout.setHorizontalGroup(
+            jd_crearArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pn_addF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        jd_crearArchivoLayout.setVerticalGroup(
+            jd_crearArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pn_addF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("Carpeta");
+
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("Nombre:");
+
+        tf_name.setBackground(new java.awt.Color(255, 255, 255));
+        tf_name.setForeground(new java.awt.Color(0, 0, 0));
+
+        bt_addCarpeta.setText("Add carpeta");
+        bt_addCarpeta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_addCarpetaMouseClicked(evt);
+            }
+        });
+
+        bt_addArchivo.setText("Add archivos");
+        bt_addArchivo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                bt_addArchivoMouseClicked(evt);
+            }
+        });
+
+        jButton1.setText("Crear");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel1))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(49, 49, 49)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tf_name, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(bt_addCarpeta, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(76, 76, 76)
+                                        .addComponent(bt_addArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(0, 78, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(tf_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(bt_addArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bt_addCarpeta, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(82, 82, 82)))
+                .addComponent(jButton1)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jd_crearCarpetaLayout = new javax.swing.GroupLayout(jd_crearCarpeta.getContentPane());
+        jd_crearCarpeta.getContentPane().setLayout(jd_crearCarpetaLayout);
+        jd_crearCarpetaLayout.setHorizontalGroup(
+            jd_crearCarpetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jd_crearCarpetaLayout.setVerticalGroup(
+            jd_crearCarpetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        crearCarpeta.setText("nueva carpeta");
+        crearCarpeta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crearCarpetaActionPerformed(evt);
+            }
+        });
+        menuCrud.add(crearCarpeta);
+
+        crearArchivo.setText("crear archivo");
+        crearArchivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                crearArchivoActionPerformed(evt);
+            }
+        });
+        menuCrud.add(crearArchivo);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
         pn_principal.setBackground(new java.awt.Color(204, 204, 204));
 
-        jp_principal.setBackground(new java.awt.Color(255, 255, 255));
-        jp_principal.setModel(new DefaultListModel());
-        jScrollPane1.setViewportView(jp_principal);
+        jl_principal.setBackground(new java.awt.Color(255, 255, 255));
+        jl_principal.setModel(new DefaultListModel());
+        jl_principal.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jl_principalValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jl_principal);
 
         jt_arbol.setBackground(new java.awt.Color(255, 255, 255));
         jt_arbol.setForeground(new java.awt.Color(0, 0, 0));
+        jt_arbol.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jt_arbolMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jt_arbol);
+
+        jt_reporteDescarga.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null},
+                {null},
+                {null},
+                {null}
+            },
+            new String [] {
+                "Archivos Descargados"
+            }
+        ));
+        jScrollPane3.setViewportView(jt_reporteDescarga);
 
         javax.swing.GroupLayout pn_principalLayout = new javax.swing.GroupLayout(pn_principal);
         pn_principal.setLayout(pn_principalLayout);
@@ -62,10 +402,13 @@ public class Principal extends javax.swing.JFrame {
                             .addComponent(pb_descarga, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(pb_barra, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(31, Short.MAX_VALUE))
-                    .addGroup(pn_principalLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_principalLayout.createSequentialGroup()
+                        .addGroup(pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane3)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pn_principalLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(64, 64, 64))))
         );
         pn_principalLayout.setVerticalGroup(
@@ -77,9 +420,11 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(pb_barra, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
-                .addContainerGap(76, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(104, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -96,6 +441,88 @@ public class Principal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void bt_crearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_crearMouseClicked
+        if (c == null) {
+            try {
+                admin.getArchivos().add(new Archivo(tf_nF.getText(), Double.parseDouble(tf_sF.getText()), (String)cb_cb.getSelectedItem()));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(jd_crearArchivo, "Ingrese Valores Correctos");
+            }
+        } else {
+            try {
+                c.getArchivos().add(new Archivo(tf_nF.getText(), (String)cb_cb.getSelectedItem(), Double.parseDouble(tf_sF.getText()), c));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(jd_crearArchivo, "Ingrese Valores Correctos");
+            }
+        }
+  
+        admin.escriba();
+        resetTree(0);
+        c = null;
+        jd_crearArchivo.dispose();
+    }//GEN-LAST:event_bt_crearMouseClicked
+
+    private void bt_addCarpetaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_addCarpetaMouseClicked
+         
+           
+       
+        
+    }//GEN-LAST:event_bt_addCarpetaMouseClicked
+
+    private void bt_addArchivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_addArchivoMouseClicked
+        
+    }//GEN-LAST:event_bt_addArchivoMouseClicked
+
+    private void crearCarpetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearCarpetaActionPerformed
+       Object obj = ((DefaultMutableTreeNode)jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
+        System.out.println(obj.getClass().toString());
+       Carpeta folder = new Carpeta();
+       if(obj instanceof Carpeta){
+          c = (Carpeta) obj;
+          c.getCarpetas().add(new Carpeta(JOptionPane.showInputDialog("Ingrese nombre de carpeta"), c));
+       }else{
+           c = null;
+           admin.getCarpetas().add(new Carpeta(JOptionPane.showInputDialog("Ingrese nombre de carpeta")));
+       }
+       
+       admin.escriba();
+       resetTree(0);
+       
+    }//GEN-LAST:event_crearCarpetaActionPerformed
+
+    private void jt_arbolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_arbolMouseClicked
+       
+        if(SwingUtilities.isRightMouseButton(evt)){
+           jt_arbol.setSelectionRow(jt_arbol.getClosestRowForLocation(evt.getX(), evt.getY()));
+           menuCrud.show(jt_arbol, evt.getX(), evt.getY());
+          
+       }
+    }//GEN-LAST:event_jt_arbolMouseClicked
+
+    private void crearArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearArchivoActionPerformed
+       Object obj = ((DefaultMutableTreeNode)jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
+       if(obj instanceof Carpeta){
+          c = (Carpeta) obj;
+       }else{
+           c = null;
+       }
+        System.out.println(obj.getClass().toString());
+      
+       iniciarFile();
+               
+    }//GEN-LAST:event_crearArchivoActionPerformed
+
+    private void jl_principalValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jl_principalValueChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jl_principalValueChanged
+
+    public void iniciarCarpeta(){
+        jd_crearCarpeta.pack();
+        jd_crearCarpeta.setLocationRelativeTo(this);
+        jd_crearCarpeta.setModal(true);
+        jd_crearCarpeta.setVisible(true);
+        
+    }
     /**
      * @param args the command line arguments
      */
@@ -132,12 +559,35 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bt_addArchivo;
+    private javax.swing.JButton bt_addCarpeta;
+    private javax.swing.JButton bt_crear;
+    private javax.swing.JComboBox<String> cb_cb;
+    private javax.swing.JMenuItem crearArchivo;
+    private javax.swing.JMenuItem crearCarpeta;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList<String> jp_principal;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JDialog jd_crearArchivo;
+    private javax.swing.JDialog jd_crearCarpeta;
+    private javax.swing.JList<String> jl_principal;
     private javax.swing.JTree jt_arbol;
+    private javax.swing.JTable jt_reporteDescarga;
+    private javax.swing.JLabel lb_ef;
+    private javax.swing.JLabel lb_nf;
+    private javax.swing.JLabel lb_sf;
+    private javax.swing.JLabel lb_tf;
+    private javax.swing.JPopupMenu menuCrud;
     private javax.swing.JProgressBar pb_barra;
     private javax.swing.JProgressBar pb_descarga;
+    private javax.swing.JPanel pn_addF;
     private javax.swing.JPanel pn_principal;
+    private javax.swing.JTextField tf_nF;
+    private javax.swing.JTextField tf_name;
+    private javax.swing.JTextField tf_sF;
     // End of variables declaration//GEN-END:variables
 }
