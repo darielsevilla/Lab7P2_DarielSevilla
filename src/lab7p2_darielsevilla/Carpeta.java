@@ -12,7 +12,8 @@ import java.util.ArrayList;
  *
  * @author HP
  */
-public class Carpeta implements Serializable{
+public class Carpeta implements Serializable {
+
     private final static long SerialVersionUID = 372;
     private String nombre;
     private String link;
@@ -21,66 +22,74 @@ public class Carpeta implements Serializable{
     private int favorito = 0;
     private int trash = 0;
     private SecureRandom random = new SecureRandom();
+
     public Carpeta() {
     }
 
     public Carpeta(String nombre) {
         this.nombre = nombre;
-      
-        
+
         String path = "dive.google.com/";
+        String link = "";
         for (int i = 0; i < 5; i++) {
             int op = random.nextInt(2);
-            
-            if(op == 0){
-               //letras 
-               String t2 = Integer.toString(random.nextInt(26)+65);
-               int op2 = random.nextInt(2);
-               
-               if(op2 == 0){
-                   t2 = t2.toLowerCase();
-               }else{
-                   t2 = t2.toUpperCase();
-               }
-               
-               link += t2;
-            }else if(op == 1){
-               ///numeros
-               link += random.nextInt(10) + 48;
+
+            if (op == 0) {
+                //letras 
+                int x = random.nextInt(26) + 65;
+                char t1 = (char) x;
+                String t2 = Character.toString(t1);
+                int op2 = random.nextInt(2);
+
+                if (op2 == 0) {
+                    t2 = t2.toLowerCase();
+                } else {
+                    t2 = t2.toUpperCase();
+                }
+
+                link += t2;
+            } else if (op == 1) {
+                ///numeros
+                link += random.nextInt(10);
             }
         }
+        path += link;
         this.link = path;
-      
+
     }
-    
-    public Carpeta(String nombre,Carpeta c) {
+
+    public Carpeta(String nombre, Carpeta c) {
         this.nombre = nombre;
-        
-        String path = c.getLink();
-        
+
+        String path = c.getLink()+"/";
+        String link = "";
         for (int i = 0; i < 5; i++) {
             int op = random.nextInt(2);
-            
-            if(op == 0){
-               //letras 
-               String t2 = Integer.toString(random.nextInt(26)+65);
-               int op2 = random.nextInt(2);
-               
-               if(op2 == 0){
-                   t2 = t2.toLowerCase();
-               }else{
-                   t2 = t2.toUpperCase();
-               }
-               
-               link += t2;
-            }else if(op == 1){
-               ///numeros
-               link += random.nextInt(10) + 48;
+
+            if (op == 0) {
+                //letras 
+                int x = random.nextInt(26) + 65;
+                char t1 = (char) x;
+                String t2 = Character.toString(t1);
+                int op2 = random.nextInt(2);
+
+                if (op2 == 0) {
+                    t2 = t2.toLowerCase();
+                } else {
+                    t2 = t2.toUpperCase();
+                }
+
+                link += t2;
+            } else if (op == 1) {
+                ///numeros
+                link += random.nextInt(10);
             }
         }
+        path += link;
         this.link = path;
+
     }
-    
+
     public String getNombre() {
         return nombre;
     }
@@ -96,8 +105,6 @@ public class Carpeta implements Serializable{
     public void setLink(String link) {
         this.link = link;
     }
-    
-    
 
     public ArrayList<Archivo> getArchivos() {
         return archivos;
@@ -135,7 +142,5 @@ public class Carpeta implements Serializable{
     public String toString() {
         return this.nombre;
     }
-     
-    
-    
+
 }

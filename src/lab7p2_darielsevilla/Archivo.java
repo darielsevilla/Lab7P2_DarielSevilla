@@ -51,7 +51,7 @@ public class Archivo implements Serializable{
                link += t2;
             }else if(op == 1){
                ///numeros
-               link += random.nextInt(10) + 48;
+               link += random.nextInt(10);
             }
         }
         this.path = link;
@@ -61,7 +61,7 @@ public class Archivo implements Serializable{
         this.nombre = nombre;
         this.size = size;
         this.extension = extension;
-        String link = c.getLink();
+        String link = c.getLink() +"/";
        
         for (int i = 0; i < 10; i++) {
             int op = random.nextInt(2);
@@ -82,7 +82,7 @@ public class Archivo implements Serializable{
                link += t2;
             }else if(op == 1){
                ///numeros
-               link += random.nextInt(10) + 48;
+               link += random.nextInt(10);
             }
         }
         this.path = link;

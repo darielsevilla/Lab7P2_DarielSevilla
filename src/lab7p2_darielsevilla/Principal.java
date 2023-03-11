@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -30,10 +31,11 @@ public class Principal extends javax.swing.JFrame {
         String path = "./files.dar";
         admin = new Administrador(path);
         admin.lea();
-        resetTree(0);
+
         ml.addElement("Mi Unidad");
         ml.addElement("Destacados");
         ml.addElement("Papeleria");
+
     }
 
     public void iniciarFile() {
@@ -51,58 +53,60 @@ public class Principal extends javax.swing.JFrame {
                 if (a.getTrash() == 0) {
                     raiz.add(new DefaultMutableTreeNode(a));
                 }
-            }else if(x== 1){
+            } else if (x == 1) {
                 if (a.getTrash() == 0 && a.getFavorito() == 1) {
                     raiz.add(new DefaultMutableTreeNode(a));
                 }
-            }else if(x == 2){
+            } else if (x == 2) {
                 if (a.getTrash() != 0) {
                     raiz.add(new DefaultMutableTreeNode(a));
                 }
             }
 
         }
-        
+
         for (Carpeta c : admin.getCarpetas()) {
             DefaultMutableTreeNode node = nodoCarpeta(c);
-            
-           if (x == 0) {
+
+            if (x == 0) {
                 if (c.getTrash() == 0) {
                     raiz.add(node);
                 }
-            }else if(x== 1){
+            } else if (x == 1) {
                 if (c.getTrash() == 0 && c.getFavorito() == 1) {
                     raiz.add(node);
                 }
-            }else if(x == 2){
+            } else if (x == 2) {
                 if (c.getTrash() != 0) {
                     raiz.add(node);
                 }
-            }if (x == 0) {
+            }
+            if (x == 0) {
                 if (c.getTrash() == 0) {
                     raiz.add(node);
                 }
             }
-            
+
         }
-        System.out.println("llegue");
+       
         mt.reload();
     }
 
-    public DefaultMutableTreeNode nodoCarpeta(Carpeta c){
+    public DefaultMutableTreeNode nodoCarpeta(Carpeta c) {
         DefaultMutableTreeNode nodo = new DefaultMutableTreeNode(c);
-        
+
         for (Archivo a : c.getArchivos()) {
             nodo.add(new DefaultMutableTreeNode(a));
-            
+
         }
-        
+
         for (Carpeta a : c.getCarpetas()) {
-         nodo.add(nodoCarpeta(a));
+            nodo.add(nodoCarpeta(a));
         }
-            
+
         return nodo;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -133,6 +137,14 @@ public class Principal extends javax.swing.JFrame {
         menuCrud = new javax.swing.JPopupMenu();
         crearCarpeta = new javax.swing.JMenuItem();
         crearArchivo = new javax.swing.JMenuItem();
+        favoritos = new javax.swing.JMenuItem();
+        eliminar = new javax.swing.JMenuItem();
+        descargar = new javax.swing.JMenuItem();
+        link = new javax.swing.JMenuItem();
+        menuPapelera = new javax.swing.JPopupMenu();
+        recuperar = new javax.swing.JMenuItem();
+        borrar = new javax.swing.JMenuItem();
+        clear = new javax.swing.JMenuItem();
         pn_principal = new javax.swing.JPanel();
         pb_barra = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -354,13 +366,81 @@ public class Principal extends javax.swing.JFrame {
         });
         menuCrud.add(crearArchivo);
 
+        favoritos.setText("favorito");
+        favoritos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                favoritosActionPerformed(evt);
+            }
+        });
+        menuCrud.add(favoritos);
+
+        eliminar.setText("eliminar");
+        eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarActionPerformed(evt);
+            }
+        });
+        menuCrud.add(eliminar);
+
+        descargar.setText("Descargar");
+        descargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                descargarActionPerformed(evt);
+            }
+        });
+        menuCrud.add(descargar);
+
+        link.setText("mostrar link");
+        link.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkActionPerformed(evt);
+            }
+        });
+        menuCrud.add(link);
+
+        recuperar.setText("recuperar");
+        recuperar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recuperarActionPerformed(evt);
+            }
+        });
+        menuPapelera.add(recuperar);
+
+        borrar.setText("borrar");
+        borrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                borrarActionPerformed(evt);
+            }
+        });
+        menuPapelera.add(borrar);
+
+        clear.setText("clear");
+        clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearActionPerformed(evt);
+            }
+        });
+        menuPapelera.add(clear);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
 
         pn_principal.setBackground(new java.awt.Color(204, 204, 204));
 
+        pb_barra.setForeground(new java.awt.Color(0, 0, 0));
+        pb_barra.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pb_barraMouseClicked(evt);
+            }
+        });
+
         jl_principal.setBackground(new java.awt.Color(255, 255, 255));
         jl_principal.setModel(new DefaultListModel());
+        jl_principal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jl_principalMouseClicked(evt);
+            }
+        });
         jl_principal.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jl_principalValueChanged(evt);
@@ -370,6 +450,8 @@ public class Principal extends javax.swing.JFrame {
 
         jt_arbol.setBackground(new java.awt.Color(255, 255, 255));
         jt_arbol.setForeground(new java.awt.Color(0, 0, 0));
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Files");
+        jt_arbol.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jt_arbol.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jt_arbolMouseClicked(evt);
@@ -379,13 +461,10 @@ public class Principal extends javax.swing.JFrame {
 
         jt_reporteDescarga.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null}
+
             },
             new String [] {
-                "Archivos Descargados"
+                "Nombre", "Tamaño", "Extension"
             }
         ));
         jScrollPane3.setViewportView(jt_reporteDescarga);
@@ -396,20 +475,16 @@ public class Principal extends javax.swing.JFrame {
             pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pn_principalLayout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addGroup(pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pn_principalLayout.createSequentialGroup()
-                        .addGroup(pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pb_descarga, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pb_barra, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(31, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_principalLayout.createSequentialGroup()
-                        .addGroup(pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane3)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pn_principalLayout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(64, 64, 64))))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(181, 181, 181)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(pb_descarga, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pb_barra, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(31, Short.MAX_VALUE))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         pn_principalLayout.setVerticalGroup(
             pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -417,14 +492,14 @@ public class Principal extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addComponent(pb_descarga, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pb_barra, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addComponent(pb_barra, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addGroup(pn_principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -439,23 +514,24 @@ public class Principal extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void bt_crearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_crearMouseClicked
         if (c == null) {
             try {
-                admin.getArchivos().add(new Archivo(tf_nF.getText(), Double.parseDouble(tf_sF.getText()), (String)cb_cb.getSelectedItem()));
+                admin.getArchivos().add(new Archivo(tf_nF.getText(), Double.parseDouble(tf_sF.getText()), (String) cb_cb.getSelectedItem()));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(jd_crearArchivo, "Ingrese Valores Correctos");
             }
         } else {
             try {
-                c.getArchivos().add(new Archivo(tf_nF.getText(), (String)cb_cb.getSelectedItem(), Double.parseDouble(tf_sF.getText()), c));
+                c.getArchivos().add(new Archivo(tf_nF.getText(), (String) cb_cb.getSelectedItem(), Double.parseDouble(tf_sF.getText()), c));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(jd_crearArchivo, "Ingrese Valores Correctos");
             }
         }
-  
+
         admin.escriba();
         resetTree(0);
         c = null;
@@ -463,66 +539,234 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_bt_crearMouseClicked
 
     private void bt_addCarpetaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_addCarpetaMouseClicked
-         
-           
-       
-        
+
+
     }//GEN-LAST:event_bt_addCarpetaMouseClicked
 
     private void bt_addArchivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_addArchivoMouseClicked
-        
+
     }//GEN-LAST:event_bt_addArchivoMouseClicked
 
     private void crearCarpetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearCarpetaActionPerformed
-       Object obj = ((DefaultMutableTreeNode)jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
+        Object obj = ((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
         System.out.println(obj.getClass().toString());
-       Carpeta folder = new Carpeta();
-       if(obj instanceof Carpeta){
-          c = (Carpeta) obj;
-          c.getCarpetas().add(new Carpeta(JOptionPane.showInputDialog("Ingrese nombre de carpeta"), c));
-       }else{
-           c = null;
-           admin.getCarpetas().add(new Carpeta(JOptionPane.showInputDialog("Ingrese nombre de carpeta")));
-       }
-       
-       admin.escriba();
-       resetTree(0);
-       
+        Carpeta folder = new Carpeta();
+        if (obj instanceof Carpeta) {
+            c = (Carpeta) obj;
+            c.getCarpetas().add(new Carpeta(JOptionPane.showInputDialog("Ingrese nombre de carpeta"), c));
+        } else {
+            c = null;
+            admin.getCarpetas().add(new Carpeta(JOptionPane.showInputDialog("Ingrese nombre de carpeta")));
+        }
+
+        admin.escriba();
+        resetTree(0);
+
     }//GEN-LAST:event_crearCarpetaActionPerformed
 
     private void jt_arbolMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jt_arbolMouseClicked
-       
-        if(SwingUtilities.isRightMouseButton(evt)){
-           jt_arbol.setSelectionRow(jt_arbol.getClosestRowForLocation(evt.getX(), evt.getY()));
-           menuCrud.show(jt_arbol, evt.getX(), evt.getY());
-          
-       }
+        if (jl_principal.getSelectedIndex() != -1) {
+            String s = (String) ml.getElementAt(jl_principal.getSelectedIndex()) + "/";
+            TreePath[] s2 = jt_arbol.getSelectionPaths();
+            if (s2 != null) {
+                for (TreePath s3 : s2) {
+                    String s4 = s3.toString();
+                    s4 = s4.replace("[", "");
+                    s4 = s4.replace("]", "");
+                    s4 = s4.replaceAll(",", "/");
+                    s4 = s4.replaceAll(" ", "");
+
+                    s += s4;
+                }
+            }
+            pb_barra.setStringPainted(true);
+            pb_barra.setString(s);
+            if (SwingUtilities.isRightMouseButton(evt)) {
+                if (jl_principal.getSelectedIndex() != -1) {
+                    
+                   
+                    jt_arbol.setSelectionRow(jt_arbol.getClosestRowForLocation(evt.getX(), evt.getY()));
+                    if(jl_principal.getSelectedIndex() != 2){
+                        menuCrud.show(jt_arbol, evt.getX(), evt.getY());
+                    }else{
+                        menuPapelera.show(jt_arbol, evt.getX(), evt.getY());
+                    }
+                }
+            }
+            
+        }
     }//GEN-LAST:event_jt_arbolMouseClicked
 
     private void crearArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearArchivoActionPerformed
-       Object obj = ((DefaultMutableTreeNode)jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
-       if(obj instanceof Carpeta){
-          c = (Carpeta) obj;
-       }else{
-           c = null;
-       }
-        System.out.println(obj.getClass().toString());
-      
-       iniciarFile();
-               
+        Object obj = ((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
+        if (obj instanceof Carpeta) {
+            c = (Carpeta) obj;
+        } else {
+            c = null;
+        }
+
+        iniciarFile();
+
     }//GEN-LAST:event_crearArchivoActionPerformed
 
     private void jl_principalValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jl_principalValueChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_jl_principalValueChanged
 
-    public void iniciarCarpeta(){
+    private void jl_principalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jl_principalMouseClicked
+        if (jl_principal.getSelectedIndex() != -1) {
+            String op = (String) ml.getElementAt(jl_principal.getSelectedIndex());
+            if (jl_principal.getSelectedIndex() == 0) {
+                resetTree(0);
+            } else if (jl_principal.getSelectedIndex() == 1) {
+                resetTree(1);
+            } else if ((jl_principal.getSelectedIndex()) == 2) {
+                resetTree(2);
+            }
+        }
+    }//GEN-LAST:event_jl_principalMouseClicked
+
+    private void pb_barraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pb_barraMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pb_barraMouseClicked
+
+    private void favoritosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_favoritosActionPerformed
+        if (jt_arbol.getSelectionCount() > 0) {
+            Object obj = ((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
+            DefaultMutableTreeNode raiz = ((DefaultMutableTreeNode) mt.getRoot());
+            if (((DefaultMutableTreeNode) ((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getParent()).isRoot()) {
+                if (obj instanceof Archivo) {
+                    if (((Archivo) obj).getFavorito() == 0) {
+                        ((Archivo) obj).setFavorito(1);
+                    } else {
+                        ((Archivo) obj).setFavorito(0);
+                    }
+                } else if (obj instanceof Carpeta) {
+                    if(((Carpeta) obj).getFavorito() == 0){
+                    ((Carpeta) obj).setFavorito(1);
+                    }else{
+                        ((Carpeta) obj).setFavorito(0);
+                    }
+                }
+               
+                resetTree(0);
+                admin.escriba();
+            } else {
+                JOptionPane.showMessageDialog(this, "No es posible añadir a favoritos");
+            }
+        }
+    }//GEN-LAST:event_favoritosActionPerformed
+
+    private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
+        if (jt_arbol.getSelectionCount() > 0) {
+            Object obj = ((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
+            DefaultMutableTreeNode raiz = ((DefaultMutableTreeNode) mt.getRoot());
+            if (((DefaultMutableTreeNode) ((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getParent()).isRoot()) {
+                if (obj instanceof Archivo) {
+                   
+                        ((Archivo) obj).setTrash(1);
+                   
+                } else if (obj instanceof Carpeta) {
+                   
+                    ((Carpeta) obj).setTrash(1);
+                   
+                }
+                resetTree(0);
+                admin.escriba();
+            } else {
+                JOptionPane.showMessageDialog(this, "No es posible añadir a favoritos");
+            }
+        }
+    }//GEN-LAST:event_eliminarActionPerformed
+
+    private void recuperarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recuperarActionPerformed
+       if (jt_arbol.getSelectionCount() > 0) {
+            Object obj = ((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
+            DefaultMutableTreeNode raiz = ((DefaultMutableTreeNode) mt.getRoot());
+            if (((DefaultMutableTreeNode) ((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getParent()).isRoot()) {
+                if (obj instanceof Archivo) {
+                   
+                        ((Archivo) obj).setTrash(0);
+                   
+                } else if (obj instanceof Carpeta) {
+                   
+                    ((Carpeta) obj).setTrash(0);
+                   
+                }
+                admin.escriba();
+                resetTree(2);
+            } else {
+                JOptionPane.showMessageDialog(this, "No es posible añadir a favoritos");
+            }
+        }
+    }//GEN-LAST:event_recuperarActionPerformed
+
+    private void borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrarActionPerformed
+        if (jt_arbol.getSelectionCount() > 0) {
+            Object obj = ((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
+            DefaultMutableTreeNode raiz = ((DefaultMutableTreeNode) mt.getRoot());
+            if (((DefaultMutableTreeNode) ((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getParent()).isRoot()) {
+                if (obj instanceof Archivo) {
+                        admin.getArchivos().remove(obj);
+                   
+                   
+                } else if (obj instanceof Carpeta) {
+                     admin.getCarpetas().remove(obj);
+           
+                   
+                }
+                admin.escriba();
+                resetTree(2);
+            } else {
+                JOptionPane.showMessageDialog(this, "No es posible añadir a favoritos");
+            }
+        }
+    }//GEN-LAST:event_borrarActionPerformed
+
+    private void descargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_descargarActionPerformed
+        Object obj =((DefaultMutableTreeNode) jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
+        
+        if(obj instanceof  Archivo){
+            ProgressBar bar = new ProgressBar(pb_barra,((Archivo)obj), jt_reporteDescarga, pb_descarga);
+            bar.start();
+        }else{
+            ProgressBar bar = new ProgressBar(pb_barra,((Carpeta)obj), jt_reporteDescarga, pb_descarga);
+            bar.start();
+        }
+    }//GEN-LAST:event_descargarActionPerformed
+
+    private void linkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkActionPerformed
+        Object obj = ((DefaultMutableTreeNode)jt_arbol.getSelectionPath().getLastPathComponent()).getUserObject();
+        if(obj instanceof Archivo){
+            JOptionPane.showMessageDialog(this, ((Archivo)obj).getPath());       
+        }else if(obj instanceof Carpeta){
+            JOptionPane.showMessageDialog(this, ((Carpeta)obj).getLink());
+        }
+    }//GEN-LAST:event_linkActionPerformed
+
+    private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
+       DefaultMutableTreeNode raiz = (DefaultMutableTreeNode) mt.getRoot();
+        for (int i = 0; i < raiz.getChildCount(); i++) {
+            Object obj = ((DefaultMutableTreeNode) raiz.getChildAt(i)).getUserObject();
+            if(obj instanceof Archivo){
+                admin.getArchivos().remove(obj);
+            }else if(obj instanceof Carpeta){
+                admin.getCarpetas().remove(obj);
+                
+            }
+        }
+        admin.escriba();
+        resetTree(2);
+    }//GEN-LAST:event_clearActionPerformed
+
+    public void iniciarCarpeta() {
         jd_crearCarpeta.pack();
         jd_crearCarpeta.setLocationRelativeTo(this);
         jd_crearCarpeta.setModal(true);
         jd_crearCarpeta.setVisible(true);
-        
+
     }
+
     /**
      * @param args the command line arguments
      */
@@ -559,12 +803,17 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem borrar;
     private javax.swing.JButton bt_addArchivo;
     private javax.swing.JButton bt_addCarpeta;
     private javax.swing.JButton bt_crear;
     private javax.swing.JComboBox<String> cb_cb;
+    private javax.swing.JMenuItem clear;
     private javax.swing.JMenuItem crearArchivo;
     private javax.swing.JMenuItem crearCarpeta;
+    private javax.swing.JMenuItem descargar;
+    private javax.swing.JMenuItem eliminar;
+    private javax.swing.JMenuItem favoritos;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -581,11 +830,14 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel lb_nf;
     private javax.swing.JLabel lb_sf;
     private javax.swing.JLabel lb_tf;
+    private javax.swing.JMenuItem link;
     private javax.swing.JPopupMenu menuCrud;
+    private javax.swing.JPopupMenu menuPapelera;
     private javax.swing.JProgressBar pb_barra;
     private javax.swing.JProgressBar pb_descarga;
     private javax.swing.JPanel pn_addF;
     private javax.swing.JPanel pn_principal;
+    private javax.swing.JMenuItem recuperar;
     private javax.swing.JTextField tf_nF;
     private javax.swing.JTextField tf_name;
     private javax.swing.JTextField tf_sF;
